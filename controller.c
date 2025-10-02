@@ -1,15 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "LinkedList.h"
 
 int main(void) {
 
-	char input[100];
+	char input[100] = {0};
+	struct LinkedList* commands = malloc(sizeof(struct LinkedList));
+	initialize(commands);
 	const char s[2] = " ";
 
 	while (1) {
 		printf("\nFML> ");
-		gets(&input);
+		gets(input);
+		
+		char input_save[100];
+		strcpy(input_save, input);
 
 		char* arg1 = strtok(input, s);
 
@@ -263,8 +269,7 @@ int main(void) {
 				printf("Syntax error: 'history' takes no parameters.\n");
 			}
 			else {
-				// TO DO - Implement this feature
-				printf("all good!\n");
+				print_list(commands);
 			}
 		}
 
@@ -289,6 +294,14 @@ int main(void) {
 
 		else {
 			printf("'%s' is not a valid FML command.\n", arg1);
+		}
+
+		// Bounds check - if nothing is entered into the prompt, it is not saved in the LinkedList
+		if (arg1 == NULL) {
+			continue;
+		}
+		else {
+			add_node(commands, input_save);
 		}
 
 	}
