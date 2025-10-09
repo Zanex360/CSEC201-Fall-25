@@ -270,6 +270,16 @@ int main(void) {
 			}
 			else {
 				print_list(commands);
+
+				char* output = validate(commands);
+
+				if (strcmp(output, "") == 0) {
+					printf("No alterations found in the command history.\n");
+				}
+				else {
+					char* token = strtok(output, "\n");
+					printf("%s\n", token);
+				}
 			}
 		}
 
@@ -282,8 +292,15 @@ int main(void) {
 				printf("Syntax error: 'validate' takes no parameters.\n");
 			}
 			else {
-				// TO DO - Implement this feature
-				printf("all good!\n");
+				char* output = validate(commands);
+
+				if (strcmp(output, "") == 0) {
+					printf("Validation check has succeeded!\n");
+				}
+				else {
+					char* token = strtok(output, "\n");
+					printf("%s\n", token);
+				}
 			}
 		}
 

@@ -86,6 +86,7 @@ void add_node(struct LinkedList* list, char* command) {
 
 void print_list(struct LinkedList* list) {
 	struct node* temp = list->head;
+	int i = 1;
 	
 	if (temp == NULL) {
 		printf("Command history is currently empty...\n");
@@ -93,8 +94,9 @@ void print_list(struct LinkedList* list) {
 	}
 	
 	while (temp != NULL) {
-		printf("%s\n", temp->data);
+		printf("%d - %s\n", i, temp->data);
 		temp = temp->next;
+		i++;
 	}
 }
 
@@ -104,10 +106,13 @@ void print_hash(unsigned char* hash) {
 	}
 }
 
-void validate(struct LinkedList* list) {
+char* validate(struct LinkedList* list) {
+	char* output = malloc(sizeof(char) * 1000);
+	strcpy(output, "");
+	
 	// base case - if there is no head, return
 	if (list->head == NULL) {
-		return;
+		return output;
 	}
 	
 	unsigned char recomputed[HASH_SIZE];
@@ -123,7 +128,10 @@ void validate(struct LinkedList* list) {
 	
 	// check if there's an alteration in the head node
 	if (compare_hashes(recomputed, list->head->hash) != 0) {
-		printf("A node has been deleted or altered: %s\n", list->head->data);
+		char temp[400] = "A node has been deleted or altered: ";
+		strcat(temp, list->head->data);
+		strcat(temp, "\n");
+		strcat(output, temp);
 	}
 	
 	struct node* current = list->head;
@@ -133,11 +141,16 @@ void validate(struct LinkedList* list) {
 		compute_hash(current->next->data, current->hash, recomputed);
 		
 		if (compare_hashes(recomputed, current->next->hash) != 0) {
-			printf("A node has been deleted or altered: %s\n", current->next->data);
+			char temp[400] = "A node has been deleted or altered: ";
+			strcat(temp, current->next->data);
+			strcat(temp, "\n");
+			strcat(output, temp);
 		}
 		
 		current = current->next;
 	}
+
+	return output;
 }
 
 void modify_node(struct LinkedList* list, int index, char* new_data) {
