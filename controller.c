@@ -1,14 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
 #include "LinkedList.h"
 
 int main(void) {
+
+	HINSTANCE hashDLL = LoadLibrary(L"[INSERT DLL PATH HERE]");
 
 	char input[100] = {0};
 	struct LinkedList* commands = malloc(sizeof(struct LinkedList));
 	initialize(commands);
 	const char s[2] = " ";
+
+	// Check whether DLL has been imported
+	// If not, print error message
+	if (hashDLL == NULL) {
+		printf("Error: DLL required to provide hashing functionality is missing or the path is incorrect...");
+		printf("\nPlease ensure that the DLL is present and the path is correct. FML cannot function at this time.\n\n");
+		printf("QUITING!");
+		return -1;
+	}
+	// Otherwise, pass handle to LinkedList
+	else {
+		set_handle(hashDLL);
+	}
 
 	while (1) {
 		printf("\nFML> ");
